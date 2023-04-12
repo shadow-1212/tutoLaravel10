@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +16,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//write gouped route with prefix "blog" and with name
-
-Route::prefix('blog')->group(function (){
-   Route::get('/', function())
+//write grouped route with prefix "blog" and with name prefixed by "blog."
+Route::group(['prefix' => 'blog', 'as' => 'blog.'], function () {
+    Route::get('/', [\App\Http\Controllers\PostController::class,'index'])->name('index');
+    Route::get('/{slug}-{id}', [\App\Http\Controllers\PostController::class,'show'])
+        //add a constraint to the route to accept only numbers for the id
+        //add a constraint to the route to accept only letters and dashes for the slug
+        ->where(['id' => '[0-9]+', 'slug' => '[a-z0-9\-]+'])
+        ->name('show');
 });
+
