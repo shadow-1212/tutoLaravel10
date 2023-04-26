@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
  */
-class PostFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,10 +19,7 @@ class PostFactory extends Factory
         return [
             //make a factory for the posts table
             //define the fields that the factory should fill
-            'title' => $this->faker->title,
-            'slug' => $this->faker->slug,
-            'content' => $this->faker->paragraph,
-
+            'name' => $this->faker->word,
         ];
     }
 }

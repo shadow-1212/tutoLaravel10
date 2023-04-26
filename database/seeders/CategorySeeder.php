@@ -2,20 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\Models\Post;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class PostSeeder extends Seeder
+class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        //make a seeder for the posts table
-        //use the factory to create 10 posts
-        \App\Models\Post::factory(10)
-            ->has(\App\Models\Tag::factory()->count(3))
+        \App\Models\Category::factory(3)
+            ->has(Post::factory()->count(3))
             ->create();
     }
 }
