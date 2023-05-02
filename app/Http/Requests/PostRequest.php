@@ -29,6 +29,7 @@ class PostRequest extends FormRequest
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'tags' => 'required|array|exists:tags,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
         ];
     }
 

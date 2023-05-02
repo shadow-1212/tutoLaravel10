@@ -39,11 +39,15 @@ Route::group(['prefix' => 'blog', 'as' => 'blog.', 'controller' => PostControlle
         Route::post('/{post}/edit', 'update');
         Route::get('/new','create')->name('create');
         Route::post('/new','store')->name('store');
+        Route::delete('/destroy','destroy')->name('destroy');
     });
 });
 
 
 //auth route
-Route::get('/login',[\App\Http\Controllers\AuthController::class,'loginForm'])->name('auth.login');
-Route::post('/login',[\App\Http\Controllers\AuthController::class,'login']);
-Route::delete('/logout',[\App\Http\Controllers\AuthController::class,'logout'])->name('auth.logout');
+//guest route middleware group
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('/login',[\App\Http\Controllers\AuthController::class,'loginForm'])->name('auth.login');
+    Route::post('/login',[\App\Http\Controllers\AuthController::class,'login']);
+    Route::delete('/logout',[\App\Http\Controllers\AuthController::class,'logout'])->name('auth.logout');
+});

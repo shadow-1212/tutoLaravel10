@@ -22,7 +22,7 @@ class PostFactory extends Factory
             'title' => $this->faker->words(8, true),
             'slug' => $this->faker->slug,
             'content' => $this->faker->paragraph,
-
+            'image' => $this->faker->imageUrl(640, 480),
         ];
     }
 }

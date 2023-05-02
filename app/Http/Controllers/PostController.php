@@ -6,12 +6,14 @@ use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
-use Illuminate\Http\Request;
+use Auth;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\UploadedFile;
 
 class PostController extends Controller
 {
     //create a method to show all posts
-    public function index()
+    public function index(): View
     {
         //get all posts from the database and pass them to the view
         $posts = Post::with('tags','category')->paginate(15);
@@ -19,7 +21,7 @@ class PostController extends Controller
     }
 
     //create a method to show a single post
-    public function show(string $slug, Post $post)
+    public function show(string $slug, Post $post): View
     {
         //get the post from the database and pass it to the view
         return view('blog.show', ['slug'=> $slug, 'post' => $post]);
@@ -40,10 +42,9 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
         //validate the request
-        $validated = $request->validated();
         //create a new post
-        $post = Post::create($validated);
-        $post->tags()->sync($validated['tags']);
+        $post = Post::create($this->extractData(new Post(), $request));
+        $post->tags()->sync($request->validated('tags'));
         //redirect to the show view
         return to_route('blog.show', ['slug' => $post->slug, 'post' => $post->id], 301)->with('success', 'Post created successfully');
     }
@@ -61,6 +62,7 @@ class PostController extends Controller
     //create a method to show the form to edit a post
     public function edit(Post $post)
     {
+        dd($this->authorize('update', $post));
         //get the post from the database and pass it to the view
         return view('blog.edit', [
             'post' => $post,
@@ -72,14 +74,40 @@ class PostController extends Controller
     //create a method to update a post
     public function update(PostRequest $request, Post $post)
     {
-        //validate the request
-        $validated = $request->validated();
+
         //update the post
-        $post->update($validated);
-        $post->tags()->sync($validated['tags']);
+        $post->update($this->extractData($post, $request));
+        $post->tags()->sync($request->validated('tags'));
         //redirect to the show view
         return to_route('blog.show', ['slug' => $post->slug, 'post' => $post->id], 301)->with('success', 'Post updated successfully');
     }
 
+    //extract image for post
+    private function extractData(Post $post, PostRequest $request):array
+    {
+        //validate the request
+        $validated = $request->validated();
+        /**
+         * @var UploadedFile|null $image
+         */
+        $image=$request->validated('image');
+        if($image === null || $image->getError()){
+            return $validated;
+        }
+        if($post->image){
+            Storage::disk('public')->delete($post->image);
+        }
+        $validated['image'] = $image->store('blog', 'public');
+        return $validated;
+    }
 
+    public function destroy(Post $post)
+    {
+        //delete image
+        if($post->image){
+            Storage::disk('public')->delete($post->image);
+        }
+        $post->delete();
+        return to_route('blog.index')->with('success', 'Post deleted successfully');
+    }
 }
