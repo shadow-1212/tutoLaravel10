@@ -23,10 +23,12 @@ class PostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|min:8|max:255',
+            'title' => 'required|string|min:4|max:255',
             //unique slug ignore the current post using array format of rule
             'slug' => ['required', 'string', 'min:8', 'max:255', Rule::unique("posts")->ignore($this->post), 'regex:/^[a-z0-9\-]+$/'],
             'content' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'tags' => 'required|array|exists:tags,id',
         ];
     }
 

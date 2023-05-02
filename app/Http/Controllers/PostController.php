@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -28,7 +29,11 @@ class PostController extends Controller
     public function create()
     {
         $post = new Post();
-        return view('blog.create', ['post' => $post]);
+        return view('blog.create', [
+            'post' => $post,
+            'categories' => Category::select('id', 'name')->get(),
+            'tags' => Tag::select('id', 'name')->get(),
+            ]);
     }
 
     //create a method to save a new post
@@ -38,6 +43,7 @@ class PostController extends Controller
         $validated = $request->validated();
         //create a new post
         $post = Post::create($validated);
+        $post->tags()->sync($validated['tags']);
         //redirect to the show view
         return to_route('blog.show', ['slug' => $post->slug, 'post' => $post->id], 301)->with('success', 'Post created successfully');
     }
@@ -56,7 +62,11 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         //get the post from the database and pass it to the view
-        return view('blog.edit', ['post' => $post]);
+        return view('blog.edit', [
+            'post' => $post,
+            'categories' => Category::select('id', 'name')->get(),
+            'tags' => Tag::select('id', 'name')->get(),
+        ]);
     }
 
     //create a method to update a post
@@ -66,6 +76,7 @@ class PostController extends Controller
         $validated = $request->validated();
         //update the post
         $post->update($validated);
+        $post->tags()->sync($validated['tags']);
         //redirect to the show view
         return to_route('blog.show', ['slug' => $post->slug, 'post' => $post->id], 301)->with('success', 'Post updated successfully');
     }

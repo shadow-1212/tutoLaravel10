@@ -19,7 +19,7 @@ class PostFactory extends Factory
         return [
             //make a factory for the posts table
             //define the fields that the factory should fill
-            'title' => $this->faker->title,
+            'title' => $this->faker->words(8, true),
             'slug' => $this->faker->slug,
             'content' => $this->faker->paragraph,
 

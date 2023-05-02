@@ -1,6 +1,8 @@
+@extends('base')
+@section('title', "Edit {$post->title}")
+@section('content')
 <div>
-    <h1>Editer l'article</h1>
-    <p>Titre: {{$post->title}}</p>
-{{--    @include('blog.form', ['post'=>$post])--}}
+    <h1 class="text-2xl font-bold" >Editer l'article</h1>
     @include('blog.form')
 </div>
+@endsection

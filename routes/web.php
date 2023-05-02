@@ -36,6 +36,6 @@ Route::group(['prefix' => 'blog', 'as' => 'blog.', 'controller' => PostControlle
         ->name('show');
     */
     Route::get('/{post}/edit', 'edit')->name('edit');
-    Route::patch('/{post}/edit', 'update');
+    Route::post('/{post}/edit', 'update');
 });
 
