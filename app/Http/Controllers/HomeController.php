@@ -11,7 +11,6 @@ class HomeController extends Controller
     public function index(Weather $weather)
 
     {
-        dd($weather);
         return view('home');
     }
 }
