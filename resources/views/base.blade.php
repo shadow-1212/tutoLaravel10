@@ -17,7 +17,7 @@
     <body >
         <div class="flex flex-col min-h-screen">
             @include('layout.navbar')
-            <div class="mx-6 mt-6 flex grow">
+            <div class="mx-16 mt-6 flex grow">
                 @yield('content')
             </div>
         </div>

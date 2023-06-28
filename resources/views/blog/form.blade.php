@@ -3,8 +3,9 @@
     <label for="title" class="label">Title</label>
     <input type="text" name="title" value="{{old('title', $post->title)}}" class="input input-bordered w-full max-w-xs">
     @error('title') {{$message}} @enderror
-    <label for="title" class="label">Image</label>
+    <label for="image" class="label">Image</label>
     <input type="file" name="image"  class="file-input w-full max-w-xs">
+    @error('image') {{$message}} @enderror
     <label for="slug" class="label">Slug</label>
     <input type="text" name="slug" value="{{old('slug', $post->slug)}}" class="input input-bordered w-full max-w-xs">
     @error('slug') {{$message}} @enderror

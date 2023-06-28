@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ContactRequestEvent;
+use App\Http\Requests\ContactPostRequest;
 use App\Http\Requests\PostRequest;
+use App\Mail\PostContactMail;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Auth;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -109,5 +113,14 @@ class PostController extends Controller
         }
         $post->delete();
         return to_route('blog.index')->with('success', 'Post deleted successfully');
+    }
+
+    //contact method to contact the post publisher
+    public function contact(Post $post, ContactPostRequest $request)
+    {
+        event(new ContactRequestEvent($post, $request->validated()));
+        //send mail to the web app owner
+        //return back with success message
+        return back()->with('success_mail', 'Message sent successfully');
     }
 }

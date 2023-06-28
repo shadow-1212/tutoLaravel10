@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[\App\Http\Controllers\HomeController::class,'index'])->name('home');
 
 //write grouped route with prefix "blog" and with name prefixed by "blog."
 Route::group(['prefix' => 'blog', 'as' => 'blog.', 'controller' => PostController::class], function () {
@@ -40,11 +38,13 @@ Route::group(['prefix' => 'blog', 'as' => 'blog.', 'controller' => PostControlle
         Route::get('/new','create')->name('create');
         Route::post('/new','store')->name('store');
         Route::delete('/destroy','destroy')->name('destroy');
+        Route::post('/{post}/contact','contact')->name('contact')->where(['post' => '[0-9]+']);
+
     });
 });
 
 
-//auth route
+//guest route
 //guest route middleware group
 Route::group(['middleware' => 'guest'], function () {
     Route::get('/login',[\App\Http\Controllers\AuthController::class,'loginForm'])->name('auth.login');
