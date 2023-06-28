@@ -40,7 +40,11 @@
                 </article>
             @endforeach
         </div>
-
-        {{$posts->links()}}
+        <div>
+            <button hx-get="{{ $posts->nextPageUrl()}}" hx-swap="outerHTML">See more</button>
+        </div>
+        <div class="hidden">
+            {{$posts->links()}}
+        </div>
     </div>
 @endsection

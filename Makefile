@@ -18,8 +18,11 @@ up:
 #command to run sail down
 down:
 	$(SAIL_DOWN)
-#command to run sail artisan
-artisan:
+#command for sail and arguments
+sail:
+	$(SAIL) $(filter-out $@,$(MAKECMDGOALS))
+#command to run sail artisan with arguments
+sail_artisan:
 	$(SAIL_ARTISAN) $(filter-out $@,$(MAKECMDGOALS))
 #command to run sail composer
 composer:

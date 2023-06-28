@@ -11,17 +11,23 @@ use App\Models\Post;
 use App\Models\Tag;
 use Auth;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
     //create a method to show all posts
-    public function index(): View
+    public function index(Request $request): View
     {
         //get all posts from the database and pass them to the view
-        $posts = Post::with('tags','category')->paginate(15);
-        return view('blog.index', ['posts' => $posts]);
+        $posts = Post::with('tags','category')->paginate(10);
+
+        $view='blog.index';
+        if($request->attributes->get('htmx')){
+            $view='blog.index-htmx';
+        }
+        return view($view, ['posts' => $posts]);
     }
 
     //create a method to show a single post
